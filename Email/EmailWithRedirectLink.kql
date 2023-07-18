@@ -1,0 +1,11 @@
+//Use this query to find emails with a link that contains a redirect. The redirect domain will be parsed to RedirectDomain in the output.
+//Phishing emails often abuse legitimate URL's that allow for open redirects to trick users into thinking the link is safe. The query
+//can be used as a starting point to hunt for phishing emails. The SenderDisplayName and Subject would be other key fields for context
+//in the hunt.
+
+EmailEvents
+| join EmailUrlInfo on NetworkMessageId
+| where Url matches regex "https?:\\/\\/.+\\/.+=(.*(\\/\\/|%2F%2F))?(([a-z0-9]+\\.)+[a-z0-9]+)(\\/|%2F).*"
+| extend RedirectDomain = extract("https?:\\/\\/.+\\/.+=(.*(\\/\\/|%2F%2F))?(([a-z0-9]+\\.)+[a-z0-9]+)(\\/|%2F).*",3,Url)
+| project Timestamp, NetworkMessageId, SenderMailFromAddress, SenderFromAddress, SenderDisplayName, Subject,
+RecipientEmailAddress, UrlDomain, RedirectDomain
