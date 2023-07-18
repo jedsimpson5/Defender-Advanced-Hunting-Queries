@@ -1,0 +1,10 @@
+//SMTP is the last protocol that Microsoft allows for use with basic auth and is commonly used as a brute force attack vector. Use the output of this query to get an
+//overview of SMTP login failure activity. Sorting the output by NumberOfSignInAttempts will give a good idea of accounts that are being brute forced.
+
+AADSignInEventsBeta
+| where ErrorCode != "0"
+| where LogonType == @"[""interactiveUser""]"
+| where ClientAppUsed == "Authenticated SMTP"
+| summarize NumberOfSignInAttempts = count(), LatestFailedSignInAttempt = max(Timestamp),
+NumberOfUniqueIPAdresses = count_distinct(IPAddress), NumberOfUniqueCountries = count_distinct(Country),
+Country = make_set(Country) by AccountUpn
