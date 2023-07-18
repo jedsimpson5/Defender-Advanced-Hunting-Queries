@@ -1,0 +1,9 @@
+//Use this query to find when a user has clicked on a link or attachment in Outlook that opens in the browser. The key output field will be
+//ProcessCommandLine. The argument of the commandline will be the file name or URL that was opened. This can be useful to find users that 
+//have clicked on phishing links or attachments. To filter on the DeviceName or AccountName, uncomment the respective line.
+
+DeviceProcessEvents
+//| where DeviceName contains ""
+//| where AccountName contains ""
+| where InitiatingProcessFileName contains "outlook.exe"
+| where FileName in~ ("chrome.exe", "msedge.exe", "firefox.exe")
