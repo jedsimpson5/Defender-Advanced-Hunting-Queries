@@ -1,0 +1,7 @@
+//Use this query to look at activity originating from an external storage device such as a USB or external hard drive. The query defaults to process
+//activity. To look at file operations comment DeviceProcessEvents and uncomment DeviceFileEvents.
+
+DeviceProcessEvents
+//DeviceFileEvents
+| where FolderPath !startswith "C"
+| where FolderPath matches regex "\\D:.+"
